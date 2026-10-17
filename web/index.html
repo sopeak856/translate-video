@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khmer Story Video Dubber & Translator | កម្មវិធីបកប្រែ និងបញ្ចូលសំឡេងរឿងជាភាសាខ្មែរ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation / Header -->
+        <header class="app-header">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-title">Khmer Story Studio AI</h1>
+                    <p class="logo-subtitle">កម្មវិធីបកប្រែរឿង និងញែកសំឡេងសាច់រឿង (Background Sound) ជាភាសាខ្មែរ</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-badge" id="systemStatusBadge">
+                    <span class="status-dot"></span>
+                    <span id="systemStatusText">ប្រព័ន្ធរួចរាល់ (System Ready)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="main-grid">
+            <!-- Left Column: Settings & Configuration -->
+            <section class="panel control-panel">
+                <!-- 1. Video Input Section -->
+                <div class="card video-select-card">
+                    <div class="card-header">
+                        <span class="step-num">១</span>
+                        <div>
+                            <h2 class="card-title">ជ្រើសរើសវីដេអូដើម (Select Video)</h2>
+                            <p class="card-desc">គាំទ្រគ្រប់ទម្រង់ (MP4, MKV, AVI, WebM...)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-icon">
+                            <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                            </svg>
+                        </div>
+                        <p class="drop-title">ចុចទីនេះ ដើម្បីជ្រើសរើសវីដេអូ</p>
+                        <p class="drop-sub">ឬអូសទម្លាក់ឯកសារវីដេអូចូល</p>
+                        <button class="btn btn-primary" id="btnBrowseVideo" type="button">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"/></svg>
+                            បើកមើលឯកសារ (Browse Video)
+                        </button>
+                    </div>
+
+                    <div class="selected-file-info hidden" id="fileInfoBox">
+                        <div class="file-icon-box">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        </div>
+                        <div class="file-details">
+                            <p class="file-name" id="selectedFileName">movie.mp4</p>
+                            <p class="file-path" id="selectedFilePath">D:/Videos/movie.mp4</p>
+                            <div class="file-meta">
+                                <span class="tag" id="selectedFileSize">0 MB</span>
+                                <span class="tag tag-success" id="outputFolderNotice">លទ្ធផលនឹងរក្សាទុកក្នុង Folder នេះ</span>
+                            </div>
+                        </div>
+                        <button class="btn-icon" id="btnClearFile" title="ដកឯកសារចេញ">✕</button>
+                    </div>
+                </div>
+
+                <!-- 2. AI Audio & Voice Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="step-num">២</span>
+                        <div>
+                            <h2 class="card-title">ការកំណត់សំឡេង & AI (Audio & Voice)</h2>
+                            <p class="card-desc">ជ្រើសរើសសំឡេងតួអង្គ និងការញែក Background Sound</p>
+                        </div>
+                    </div>
+
+                    <!-- Background Sound Separation Switch -->
+                    <div class="switch-container">
+                        <div class="switch-info">
+                            <label class="switch-title" for="chkSeparateBgm">ញែកសំឡេងសាច់រឿង (Background Sound Isolation)</label>
+                            <p class="switch-desc">ប្រើ AI Demucs ដើម្បីបំបែកសំឡេងភ្លេង BGM និង Sound Effects ទុកឱ្យនៅដដែល</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chkSeparateBgm" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Voice Actor Selection -->
+                    <div class="field-group">
+                        <label class="field-label">សំឡេងអ្នកអាន/តួអង្គខ្មែរ (Khmer Voice Actor)</label>
+                        <div class="voice-cards-grid" id="voiceCardsContainer">
+                            <label class="voice-card active">
+                                <input type="radio" name="voiceSelect" value="km-KH-PisethNeural" checked>
+                                <div class="voice-card-body">
+                                    <div class="voice-header">
+                                        <span class="voice-gender male">ប្រុស (Male)</span>
+                                        <button type="button" class="btn-preview-voice" data-voice="km-KH-PisethNeural" title="ស្តាប់សាកល្បង">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                            ស្តាប់
+                                        </button>
+                                    </div>
+                                    <div class="voice-name">Piseth (ពិសិដ្ឋ)</div>
+                                    <div class="voice-desc">សំឡេងប្រុស ច្បាស់ ធ្ងន់ និងធម្មជាតិ ស័ក្តិសមសម្រាប់រឿងនិទាន/ភាពយន្ត</div>
+                                </div>
+                            </label>
+
+                            <label class="voice-card">
+                                <input type="radio" name="voiceSelect" value="km-KH-SreymomNeural">
+                                <div class="voice-card-body">
+                                    <div class="voice-header">
+                                        <span class="voice-gender female">ស្រី (Female)</span>
+                                        <button type="button" class="btn-preview-voice" data-voice="km-KH-SreymomNeural" title="ស្តាប់សាកល្បង">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                            ស្តាប់
+                                        </button>
+                                    </div>
+                                    <div class="voice-name">Sreymom (ស្រីមុំ)</div>
+                                    <div class="voice-desc">សំឡេងស្រី ស្រទន់ រលូន និងច្បាស់ ស័ក្តិសមសម្រាប់សាច់រឿងរំជួលចិត្ត</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Language & Model Row -->
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label class="field-label" for="selSourceLang">ភាសាដើមក្នុងវីដេអូ (Source Language)</label>
+                            <select id="selSourceLang" class="form-select">
+                                <option value="auto">ស្វែងរកស្វ័យប្រវត្តិ (Auto Detect)</option>
+                                <option value="en">អង់គ្លេស (English)</option>
+                                <option value="zh">ចិន (Chinese)</option>
+                                <option value="th">ថៃ (Thai)</option>
+                                <option value="ko">កូរ៉េ (Korean)</option>
+                                <option value="ja">ជប៉ុន (Japanese)</option>
+                                <option value="fr">បារាំង (French)</option>
+                                <option value="vi">វៀតណាម (Vietnamese)</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label" for="selWhisperModel">AI Speech Model</label>
+                            <select id="selWhisperModel" class="form-select">
+                                <option value="base" selected>Base (លឿន និងសមរម្យ - Recommended)</option>
+                                <option value="tiny">Tiny (លឿនបំផុត - ស្រាល)</option>
+                                <option value="small">Small (ច្បាស់ល្អ)</option>
+                                <option value="medium">Medium (ច្បាស់ខ្លាំង)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Audio Mixer Sliders -->
+                    <div class="audio-mixer-box">
+                        <div class="mixer-title">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                            <span>ឧបករណ៍លាយសំឡេង (Audio Stems Mixer)</span>
+                        </div>
+                        
+                        <!-- BGM Volume -->
+                        <div class="slider-row">
+                            <div class="slider-label">
+                                <span>សំឡេង Background Sound (BGM/SFX)</span>
+                                <span class="slider-val" id="valBgmVol">100%</span>
+                            </div>
+                            <input type="range" id="rangeBgmVol" min="0" max="200" value="100" class="form-range">
+                        </div>
+
+                        <!-- Dubbing Volume -->
+                        <div class="slider-row">
+                            <div class="slider-label">
+                                <span>សំឡេងនិយាយភាសាខ្មែរ (Khmer Dubbing)</span>
+                                <span class="slider-val highlight-val" id="valDubVol">120%</span>
+                            </div>
+                            <input type="range" id="rangeDubVol" min="50" max="200" value="120" class="form-range">
+                        </div>
+
+                        <!-- Original Voice Ducking -->
+                        <div class="slider-row">
+                            <div class="slider-label">
+                                <span>សំឡេងតួអង្គដើមតិចៗ (Original Voice Ducking)</span>
+                                <span class="slider-val" id="valOrigVol">0% (Muted)</span>
+                            </div>
+                            <input type="range" id="rangeOrigVol" min="0" max="50" value="0" class="form-range">
+                        </div>
+                    </div>
+
+                    <!-- Additional Options -->
+                    <div class="checkbox-options">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="chkGenerateSrt" checked disabled>
+                            <span class="checkmark"></span>
+                            <span>បង្កើតឯកសារ Subtitle (.srt) ក្នុង Folder ដើម</span>
+                        </label>
+
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="chkBurnSubtitles">
+                            <span class="checkmark"></span>
+                            <span>បង្កប់អក្សរខ្មែរលើវីដេអូ (Burn Subtitles into Video)</span>
+                        </label>
+
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="chkSaveStems">
+                            <span class="checkmark"></span>
+                            <span>រក្សាទុកឯកសារភ្លេង BackgroundSound.mp3 ដាច់ដោយឡែក</span>
+                        </label>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons-group">
+                        <button class="btn btn-action-start" id="btnStartProcess" type="button">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            ចាប់ផ្តើមបកប្រែ & បញ្ចូលសំឡេងខ្មែរ
+                        </button>
+                        <button class="btn btn-danger hidden" id="btnCancelProcess" type="button">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                            បញ្ឈប់ (Cancel)
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Live Monitor, Progress, Video Player -->
+            <section class="panel monitor-panel">
+                <!-- Live Pipeline Progress Tracker -->
+                <div class="card">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h2 class="card-title">ដំណើរការបច្ចុប្បន្ន (Live Progress)</h2>
+                            <p class="card-desc" id="currentStageDesc">កំពុងរង់ចាំការចាប់ផ្តើម...</p>
+                        </div>
+                        <div class="progress-percent" id="lblProgressPct">0%</div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+                    </div>
+
+                    <!-- Step-by-step pipeline indicators -->
+                    <div class="pipeline-steps">
+                        <div class="step-item" id="pstep-extracting">
+                            <span class="step-bullet">1</span>
+                            <span class="step-text">ទាញយកសំឡេង</span>
+                        </div>
+                        <div class="step-item" id="pstep-separating">
+                            <span class="step-bullet">2</span>
+                            <span class="step-text">ញែក BGM</span>
+                        </div>
+                        <div class="step-item" id="pstep-transcribing">
+                            <span class="step-bullet">3</span>
+                            <span class="step-text">ស្តាប់ឃ្លានិយាយ</span>
+                        </div>
+                        <div class="step-item" id="pstep-translating">
+                            <span class="step-bullet">4</span>
+                            <span class="step-text">បកប្រែជាខ្មែរ</span>
+                        </div>
+                        <div class="step-item" id="pstep-dubbing">
+                            <span class="step-bullet">5</span>
+                            <span class="step-text">បញ្ចូលសំឡេង</span>
+                        </div>
+                        <div class="step-item" id="pstep-mixing">
+                            <span class="step-bullet">6</span>
+                            <span class="step-text">លាយសំឡេង</span>
+                        </div>
+                        <div class="step-item" id="pstep-completed">
+                            <span class="step-bullet">✓</span>
+                            <span class="step-text">រួចរាល់</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Preview & Output Results -->
+                <div class="card result-card hidden" id="resultCard">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h2 class="card-title" style="color: #4ade80;">🎉 ការបកប្រែជោគជ័យ ១០០%!</h2>
+                            <p class="card-desc">វីដេអូលទ្ធផលត្រូវបានរក្សាទុកក្នុង Folder វីដេអូដើមរួចរាល់</p>
+                        </div>
+                        <button class="btn btn-folder" id="btnOpenFolder" type="button">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            បើក Folder វីដេអូដើម (Open Folder)
+                        </button>
+                    </div>
+
+                    <div class="video-preview-wrapper">
+                        <video id="resultVideoPlayer" controls preload="metadata">
+                            <source src="" type="video/mp4" id="videoSourceTag">
+                            កម្មវិធីរុករករបស់អ្នកមិនគាំទ្រ video player ទេ។
+                        </video>
+                    </div>
+
+                    <div class="result-details-box">
+                        <div class="result-row">
+                            <span class="res-label">ឯកសារវីដេអូលទ្ធផល:</span>
+                            <span class="res-value" id="resVideoPath">...</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="res-label">ឯកសារអក្សរខ្មែរ (SRT):</span>
+                            <span class="res-value" id="resSrtPath">...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Subtitle / Dialogue Stream -->
+                <div class="card">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3 class="card-title-sm">ឃ្លានិយាយបកប្រែផ្ទាល់ (Dialogue Stream)</h3>
+                            <p class="card-desc">បង្ហាញអត្ថបទបកប្រែ និងសំឡេងដែលកំពុងផលិត</p>
+                        </div>
+                        <span class="tag tag-cyan" id="dialogueCountTag">0 ឃ្លា</span>
+                    </div>
+                    
+                    <div class="dialogue-box" id="dialogueStreamContainer">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            <p>ឃ្លានិយាយដែលបានបកប្រែជាភាសាខ្មែរ នឹងបង្ហាញនៅត្រង់នេះ...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Console Logs -->
+                <div class="card log-card">
+                    <div class="card-header flex-between">
+                        <h3 class="card-title-sm">កំណត់ហេតុដំណើរការ (Process Console)</h3>
+                        <button class="btn-clean" id="btnClearLogs">សំអាត</button>
+                    </div>
+                    <div class="console-box" id="consoleLogs">
+                        <div class="console-line info">[System] Khmer Story Studio AI បានចាប់ផ្តើម...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Hidden audio element for voice previews -->
+    <audio id="audioPreviewPlayer" class="hidden"></audio>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
